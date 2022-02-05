@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Déplacer un forum{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        <div class="offset-2 col-8 text-center my-5">
+            <h1 class="my-5">Déplacer le forum <a href="{{ path('forum', {slug: forum.slug}) }}">"{{ forum.title }}"</a></h1>
+            {{ form(form) }}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

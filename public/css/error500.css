@@ -1,0 +1,97 @@
+body div.container{
+    display: none;
+}
+/*body {
+	height: 100%;
+	margin: 0;
+}*/
+@import url("https://fonts.googleapis.com/css?family=VT323");
+.full-screen {
+    background-color: rgb(51, 51, 51);
+    width: 100vw;
+    height: 100vh;
+    color: white;
+    text-align: center;
+    position:relative;
+  }
+
+.container1 {
+    padding-top: 4em;
+    width: 50%;
+    display: block;
+    margin: 0 auto;
+    
+  }
+  
+.error-num {
+    font-size: 8em;
+    font-family: 'Arial Black';
+    color: #46D9D1;
+  }
+
+div.message{
+        font-family:'Roboto', sans-serif;
+        left: 50%;
+	    top: 50%;
+        text-align: center;
+        font-weight: 300;
+        font-size: 2.5em;
+        color: #46D9D1;
+}
+
+
+.error-500{
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'VT323';
+    font-size: small;
+    color: #e79372;
+    text-shadow: 1px 1px 1px rgba(255, 255, 255, .3);
+    margin-top: 35px;
+  }
+  
+  .error-500:after{
+    content: attr(data-text);
+    display: block;
+    margin-top: calc(var(--height) / 10 + 15px);
+    font-size: 20pt;
+    text-align: center;
+  }
+
+footer{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+@media only screen and (max-width: 600px) {
+
+.error-num {
+    font-size: 4em;
+    font-family: 'Arial Black';
+    
+}
+div.message{
+
+    font-weight: 300;
+    font-size: 1.25em;
+}
+
+}
+@media only screen and (max-width: 320px) {
+
+.error-num {
+    font-size: 2em;
+    font-family: 'Arial Black';
+
+}
+div.message{
+    font-weight: 300;
+    font-size: 0.625em;
+}
+.error-500:after{
+    font-size: 10pt;
+    margin-top:20px;
+}
+}

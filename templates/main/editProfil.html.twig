@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block css %}{% endblock %}
+
+{% block body %}
+<div class="container">
+
+    <div>
+        <a href=" {{ path('main_profil') }} " class="text-capitalize" style="color: black;"><img style="height: 60px;" src=" {{ asset('images/retour.png') }} " alt="bouton-retour" title="Retour"><p>Page Profil</p></a>
+    </div>
+
+    <div class="row">
+        <h1 class="col-12 text-center">Modification du profil</h1>
+    </div>
+
+    <div class="row">
+        {# formulaire pour modifier l'adresse mail #}
+        <div class="col-md-6 mt-3">
+            <div class="card bg-darkblue">
+                <div class="card-body bg-darkblue text-white">
+                    <div>
+                        <h2>Modifier l'adresse mail</h2>
+                    </div>
+                    <div>
+                        {{ form(formEmail) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        {# formulaire pour modifier le mot de passe #}
+        <div class="col-md-6 mt-3">
+            <div class="card bg-darkblue">
+                <div class="card-body bg-darkblue text-white">
+                    <div>
+                        <h2>Modifier le mot de passe</h2>
+                    </div>
+                    <div>
+                        {{ form(formPass) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+
+        {# formulaire pour modifier la description #}
+        <div class="col-md-6 mt-3">
+            <div class="card bg-darkblue">
+                <div class="card-body bg-darkblue text-white">
+                    <div>
+                        <h2>Modifier la description</h2>
+                    </div>
+                    <div class="col-12">
+                        {{ form(formDesc) }}
+                    </div>
+                    <div>
+                        <a onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?')" class="btn btn-secondary bg-lightblue" href="{{ path('description_delete') }}"><i class="fas fa-trash-alt me-1"></i>Supprimer la description</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# formulaire pour modifier l'avatar #}
+        <div class="col-md-6 mt-3">
+            <div class="card bg-darkblue">
+                <div class="card-body bg-darkblue text-white" style="height: 248px;">
+                    <div>
+                        <h2>Modifier l'avatar</h2>
+                    </div>
+                    <div>
+                        {{ form(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Annonces{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1 class="fw-bold mb-1 annonce">Annonce{{ events|length > 1 ? 's' : '' }}
+                    {% if is_granted('ROLE_MODERATOR') %}
+                        <a class="text-white btn btn-darkblue" title="Créer une annonce" href="{{ path('create_event') }}"><i class="fas
+                        fa-plus"></i></a>
+                    {% endif %}
+                </h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-6 offset-md-3">
+                {% for event in events %}
+                    <div id="event-{{ event.id }}" class="my-3 bg-darkblue border border-dark card">
+                        <div class="card-body">
+                            <h2 class="text-center card-header">{{ event.title }}</h2>
+                            <p class="card-text">Publié le {{ event.publicationDate|date('d/m/y à H\\hi') }}</p>
+                            <p class="card-text">{{ event.content }}</p>
+                            <div class="card-footer">
+                                {% if is_granted('ROLE_MODERATOR') %}
+                                    <div class="mt-3 text-center d-flex justify-content-center">
+                                       <a title="Modifier l'annonce" class="text-white btn btn-darkblue mx-1" href="{{ path('edit_event', {id: event.id})
+                                       }}"><i class="fas fa-edit"></i></a>
+                                        <form class="mx-1" method="post" action="{{ path('delete_event', {'id': event.id}) }}" onsubmit="return confirm
+                                        ('Etes-vous sûr ' +
+                                         'de vouloir supprimer cette annonce ?');">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ event.id) }}">
+                                            <button title="Supprimer l'annonce" class="btn btn-darkblue"><i class="fas fa-trash-alt"></i></button>
+                                        </form>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

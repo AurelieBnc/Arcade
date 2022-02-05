@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Classement{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1>Classement</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <table class="table">
+                    <thead class="bg-darkblue">
+                        <tr>
+                            <th scope="col">Position</th>
+                            <th scope="col">Pseudo</th>
+                            <th scope="col">Messages</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for key, user in users %}
+                            <tr>
+                                <th scope="row">{{ (key + 1) }}</th>
+                                <td>{{ user.pseudonym }}</td>
+                                <td>{{ user.message }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

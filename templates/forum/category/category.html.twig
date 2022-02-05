@@ -1,0 +1,117 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des sous-categories{% endblock %}
+
+
+{% block body %}
+
+<div class="container">
+
+    {# Fil d'Ariane #}
+    <div class="row mb-5">
+        <div class="ariane col-12 text-center bg-darkblue m-0 d-flex flex-column align-items-center justify-content-center flex-lg-row">
+            <div class="px-3 py-2"><a href="{{ path('home') }}">Accueil</a></div>
+            <span class="px-3 py-2"><i class="fas fa-angle-right"></i></span>
+            <div class="px-3 py-2 text-white">
+                {{ category.title }}
+            </div>
+        </div>
+    </div>
+
+    {# image sous-catégorie + titre #}
+    <div class="row">
+        <div class="col-12 d-flex flex-row mb-5 flexNone">
+            <div class="imgcenter">
+                <img src="{{ asset('images/categories/' ~ category.image)|imagine_filter('category') }}" alt="image de la categorie">
+            </div>
+            <div class="col-md-8 offset-md-1 align-self-center text-center margintop">
+                <h1 class ="text-dark fw-bold fs-1 text-center text-capitalize ">{{ category.title }}</h1>
+            </div>
+        </div>
+    </div>
+
+
+    {# Bloc principal -> Sous-catégories #}
+    <div class="row">
+        <h2 class="p-2 bg-darkblue mb-0 text-center mb-3 ">Liste des sous-catégories
+            {% if is_granted('ROLE_MODERATOR') %}
+                <a href="{{path('new_subcategory',{slug: category.slug})}}" title="Ajouter une sous-catégorie"><button class="btn btn-darkblue"> <i class="fas fa-plus"></i></button></a>
+            {% endif %}
+        </h2>
+
+        <div class="col-12 col-md-8 offset-md-2 col-lg-12 offset-lg-0 ">
+            <div class="row pb-4 mb-4 justify-content-lg-start">
+
+                {% for subCategory in category.subCategories %}
+
+                    <div class="col-6 col-md-6 col-lg-2 my-5">
+                        <a href="{{ path('forumlist', {slug: subCategory.slug}) }}">
+                            <div class="category w-100 d-flex flex-column justify-content-center align-items-center bg-lightblue p-1 rounded-3">
+
+                                <img class="mb-1" src="{{ asset('images/subcategories/' ~ subCategory.image ) }}" alt="image de la sous-catégorie">
+                                <div class="category-title mt-1 pt-2">
+                                    <h2 class="text-center fs-5 fs-lg-3">{{ subCategory.title|capitalize }}</h2>
+                                </div>
+
+                                {% if is_granted('ROLE_MODERATOR') %}
+
+                                    <div class="mt-3 text-center d-flex flex-row">
+                                        <a class="text-white" href="{{ path('edit_sub_category', {id: subCategory.id})
+                                        }}">
+                                            <button title="Modifier la sous-catégorie" class="btn btn-darkblue mx-1" ><i class="fas fa-edit"></i></button>
+                                        </a>
+                                        <form
+                                                class="mx-1"
+                                                method="post"
+                                                action="{{ path('delete_sub_category', {'id': subCategory.id}) }}"
+                                                onsubmit="return confirm('Etes-vous sûr de vouloir supprimer cette sous-catégorie ?');"
+                                        >
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ subCategory.id) }}" >
+                                            <button title="Supprimer la sous-catégorie" class="btn btn-darkblue"><i class="fas fa-trash-alt"></i></button>
+                                        </form>
+                                    </div>
+
+                                {% endif %}
+                            </div>
+                        </a>
+                    </div>
+
+                {% else %}
+                    <div class="col-12 my-2 p-5">
+                        <p class="col-12 fw-bold text-center alert bg-lightblue mt-3 rounded-3 p-5 fs-4">Aucune sous-catégorie à afficher !</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
+
+{% block css %}
+    <style>
+        .imgcenter{
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @media (max-width: 640px) {
+            .flexNone{
+                display:unset  !important ;
+            }
+
+        .imgcenter{
+            text-align: center;
+        }
+
+        .margintop{
+            margin-top: 2%;
+        }
+
+
+
+        }
+    </style>
+{% endblock %}

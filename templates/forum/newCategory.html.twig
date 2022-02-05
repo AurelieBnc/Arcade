@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{# Titre de la page #}
+{% block title %}Ajouter une catégorie{% endblock %}
+
+{# contenu de la page profil #}
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 text-center my-5">
+            <h1 class="my-5">Ajouter une catégorie</h1>
+            {{ form(form) }}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

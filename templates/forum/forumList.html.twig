@@ -1,0 +1,124 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des forums{% endblock %}
+
+
+{% block body %}
+
+<div class="container">
+    {# Fil d'Ariane #}
+    <div class="row my-5 ">
+        <div class="ariane col-12 text-center bg-darkblue m-0 d-flex flex-column align-items-center justify-content-center flex-lg-row text-capitalize">
+            <div class="px-3 py-2">
+                <a href="{{ path('home') }}" >Accueil</a>
+            </div>
+            <span class="px-3 py-2"><i class="fas fa-angle-right"></i></span>
+            <div class="px-3 py-2 text-white">
+                <a href="{{ path('category', { slug: subCategory.category.slug }) }}">{{ subCategory.category.title }} </a>
+            </div>
+            <span class="px-3 py-2"><i class="fas fa-angle-right"></i></span>
+            <div class="px-3 py-2 ">
+               {{ subCategory.title }}
+            </div>
+        </div>
+    </div>
+
+    {# image sous-catégorie + titre #}
+<div class="row">
+    <div class="col-12 d-flex flex-row mb-5">
+        <div class="col-3">
+            <img src="{{ asset('images/subcategories/' ~ subCategory.image)|imagine_filter('category') }}" alt="image de la sous-categorie">
+        </div>
+        <div class="col-8 offset-1 align-self-center text-center">
+            <h1 class ="text-dark fw-bold fs-1 text-center text-capitalize ">{{ subCategory.title }}</h1>
+        </div>
+    </div>
+</div>
+
+    <div class="row">
+        {# Catégories principales #}
+
+        <div class="col-12 offset-lg-0 ">
+            <div class="row pb-4 mb-4 justify-content-lg-start">
+                <h2 class="p-2 bg-darkblue mb-0 text-center ">Liste des forums
+                    {% if is_granted('ROLE_MODERATOR') %}
+                        <a href="{{path('new_forum',{slug: subCategory.slug})}}" title="Ajouter un forum"><button class="btn btn-darkblue"> <i class="fas
+                        fa-plus"></i></button></a>
+
+                    {% endif %}
+                </h2>
+
+
+            {% for forum in forums %}
+                <hr>
+                <div class="col-12 forum">
+                    <div class="row">
+
+                        <!-- avatar auteur -->
+                        <div class="col-3 col-md-1">
+                            <a href="{{ path('main_profil_forum', { id : forum.author.id }) }}">
+                                {% if forum.author.avatar is null %}
+                                <img class="d-block img-fluid mt-1" src="{{ asset('images/profil_default.jpg')|imagine_filter('avatar') }}">
+                                {% else %}
+                                    <img class="d-block img-fluid mt-1" src="{{ asset('images/usersAvatar/' ~ forum.author.avatar)|imagine_filter('avatar') }}" alt="avatar">
+                                {% endif %}
+                            </a>
+                        </div>
+
+                        <div class="titre-forum col-9 col-md-7 d-flex flex-column">
+                            <a class="card-title fs-3 text-capitalize text-dark" style="text-decoration:none;" href="{{path('forum',{slug: forum.slug})}}">{{forum.title}}</a>
+                            <p><a href="{{ path('main_profil_forum', { id : forum.author.id }) }}">{{ forum.author.pseudonym }}</a>- {{ forum.publicationDate|date("d/m/Y") }}</p>
+
+                        </div>
+                        <div class="col-6 col-md-2 d-flex justify-content-center align-items-center forum-aside">
+                            <p>Réponse : {{ forum.comments|length }}</p>
+                        </div>
+                        <div class="col-6 col-md-2 d-flex justify-content-center align-items-center forum-aside">
+                            <p>Vues : {{ forum.view }}</p>
+                        </div>
+                        {% if forum.author == app.user or is_granted('ROLE_MODERATOR') %}
+                            <div class="d-flex p-2 bd-highlight">
+
+                                <div class="p-2 ">
+                                    <a class=" btn btn-darkblue " href="{{ path('forum_edit', { id : forum.id }) }}" title="Editer le forum"><i class="fas fa-edit"></i></a>
+                                </div>
+                                {% if is_granted('ROLE_MODERATOR') %}
+                                <div class="p-2 ">
+                                    <form
+                                            class="mx-1"
+                                            method="post"
+                                            action="{{ path('delete_forum', {'id': forum.id}) }}"
+                                            onsubmit="return confirm('Etes-vous sûr de vouloir supprimer ce forum ?');"
+                                    >
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ forum.id) }}">
+                                        <button class="btn btn-darkblue" title="Supprimer le forum"><i class="fas fa-trash-alt"> </i></button>
+                                    </form>
+                                </div>
+                                <div class="p-2">
+                                    <a class="btn btn-darkblue" href="{{ path('move_forum', {id: forum.id}) }}" title =" Déplacer le forum"><i class="fas fa-random"></i> Déplacer</a>
+                                </div>
+                                {% endif %}
+                                </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% else %}
+
+                    <p class="col-12 fw-bold text-center alert bg-lightblue mt-3 rounded-3 p-5 fs-4 ">Aucun forum à afficher !</p>
+
+                {% endfor %}
+            </div>
+            {# pagination bottom #}
+            <div class="row">
+                <div class=" text-center d-flex justify-content-center ">
+                    {{ knp_pagination_render(forums) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

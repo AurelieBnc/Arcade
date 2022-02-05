@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Erreur 404!{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{{ asset('css/error404.css') }}">
+
+{% endblock css %}
+{% block body %}
+
+
+<body>
+    <section class="notFound">
+        <div class="img">
+        <img src="https://assets.codepen.io/5647096/backToTheHomepage.png" alt="Back to the Homepage"/>
+        <img src="https://assets.codepen.io/5647096/Delorean.png" alt="El Delorean, El Doc y Marti McFly"/>
+        </div>
+        <div class="text">
+        <h1>404</h1>
+        <h2>PAGE NON TROUVEE</h2>
+        <h3>RETOURNEZ À LA PAGE D'ACCUEIL?</h3>
+        <a href="{{ path('home') }}" class="yes">OUI</a>
+        <a href="https://www.youtube.com/watch?v=G3AfIvJBcGo">NON</a>
+        </div>
+    </section>
+    </body>
+
+
+{# <img src="{{ asset('images/404.png') }}"> #}
+{#<img style="width: 100%; height: auto;  " src="{{ asset('images/404.png') }}" class="img-fluid"  alt="Erreur 404, Page Not Found">#}
+
+{% endblock %}
+
+

@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un compte{% endblock %}
+
+{% block body %}
+<div class="container">
+    {% for flashError in app.flashes('verify_email_error') %}
+    <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+    {% endfor %}
+
+
+    <div class="row">
+        <div class="col-12 col-md-8 offset-md-2 mt-5 p-5">
+            <h1 class="col-6 offset-3 text-center" >Créer un compte</h1>
+
+            {{ form_start(registrationForm) }}
+
+                {{ form_row(registrationForm.pseudonym) }}
+                {{ form_row(registrationForm.email) }}
+                {{ form_row(registrationForm.plainPassword, {label: 'Password'}) }}
+                {# Affichage du captcha avec la clé publique récupérée directement grâce à la passerelle faite dans twig.yaml #}
+                <div class="mb-3">
+                    <div class="g-recaptcha" data-sitekey="{{ google_recaptcha_site_key }}"></div>
+                </div>
+                {{ form_row(registrationForm.save) }}
+
+            {{ form_end(registrationForm) }}
+
+            <div class="ps-2"><a href="{{ path('app_forgot_password_request')}}">Mot de passe oublié</a></div>
+
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block css %}
+    {# Inclusion du fichier JS permettant de faire fonctionner le recaptcha de Google #}
+    {# Ce fichier doit être dans le head HTML, d'où sont inclusion dans le block "css" #}
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+{% endblock %}

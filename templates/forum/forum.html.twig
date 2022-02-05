@@ -1,0 +1,292 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Forum {% endblock %}
+
+{% block body %}
+
+<div class="container">
+     <div class="row deletegutter">
+        <div class="gutters-sm-0 mt-5">
+
+            {# Fil d'Ariane #}
+            <div class="container">
+                <div class="row gutters-sm mt-5 my-5">
+                    <div class="ariane col-12 text-center bg-darkblue m-0 d-flex flex-column justify-content-center flex-lg-row text-capitalize text-white">
+
+                        <div class="px-3 py-2">
+                            <a href="{{ path('home') }}">Accueil</a>
+                        </div>
+                        <span class="px-3 py-2"><i class="fas fa-angle-right"></i></span>
+                        <div class="px-3 py-2">
+                            <a href="{{ path('category', { slug: forum.subCategory.category.slug }) }}">{{ forum.subCategory.category.title }} </a>
+                        </div>
+                        <span class="px-3 py-2"><i class="fas fa-angle-right"></i></span>
+                        <div class="px-3 py-2">
+                            <a href="{{ path('forumlist', { slug: forum.subCategory.slug }) }}">{{ forum.subCategory.title }} </a>
+                        </div>
+                        <span class="px-3 py-2"><i class="fas fa-angle-right"></i></span>
+                        <div class="px-3 py-2">
+                            <a href="#top-forum-selected">{{ forum.title }}</a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            {# Titre de la discussion + autheur + date #}
+            <div id="top-forum-selected" class="row text-capitalize">
+                <div class="col-6 offset-3 text-center">
+                    <h2>{{ forum.title }}</h2>
+                    <div class="d-flex flex-column flex-lg-row justify-content-center ">
+                        <p class="text-secondary px-3"><span><i class="fas fa-user px-1"></i></span>
+                            <a class="text-dark" href="{{ path('main_profil_forum', { id : forum.author.id }) }}">{{ forum.author.pseudonym }} </a>
+                        </p>
+                        <p class="text-secondary"><span><i class="far fa-clock px-1"></i></span>{{ forum.publicationDate|date("d/m/Y à H\\hi") }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            {# Topic #}
+            <div class="row mt-5">
+
+                {# Affiche le nombre message + pagination #}
+                <div class="row ">
+                    <p class="col-12 text-center">Nombre total de réponses : {{ forum.comments|length }}</p>
+                </div>
+                {% if comments is not empty %}
+                <div class="row">
+                    <div class="me-auto m-3 text-center d-flex justify-content-end ">
+                        {{ knp_pagination_render(comments) }}
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="col-12 text-capitalize">
+                    <div class="row">
+                        <div class="ariane bg-darkblue m-0 d-flex flex-column flex-lg-row">
+                            <p class="px-3 py-2">
+                                <a href="#">{{ forum.subCategory.category.title }}</a>
+                                > {# {{ path('category', { slug: forum.subCategory.category.slug }) }} #}
+                                <a href="#">{{ forum.subCategory.title }}</a>
+                                > {# {{ path('category_sub_category', { slug: forum.subCategory.slug }) }} #}
+                                <a href="#top-forum-selected">{{ forum.title }}</a> {# todo #}
+                            </p>
+                        </div>
+
+                        <div class="row topic-forum bg-dark border border-dark border-3 p-0 g-0
+                            d-flex flex-column flex-lg-row">
+
+                            {# Profil de l'utilisateur (pseudo, rôle, photo de profil si il y'en as une, date d'inscription, nombre de messages) #}
+                            <div class=" col-12 col-lg-3 col-xl-2 d-flex ">
+                                <div class="col-12 d-flex bg-dark">
+
+
+                                    {# détails profil #}
+                                    <div class="card-profil-topic card rounded bg-dark text-white p-lg-3 text-capitalize
+                                                d-flex flex-grow-1     d-flex flex-row flex-lg-column">
+                                        <a href="{{ path('main_profil_forum', { id : forum.author.id }) }}">
+                                            {% if forum.author.avatar is null %}
+                                            <img class="img-thumbnail img-fluid bg-darkblue rounded mb-3 mb-lg-5 offset-2 col-8 mt-2 offset-lg-1 col-lg-10 mt-0 p-3"
+                                                src="{{ asset('images/profil_default.jpg')|imagine_filter('avatar') }}"
+                                                alt="avatar">
+                                            {% else %}
+                                            <img class="img-thumbnail img-fluid bg-darkblue rounded mb-3 mb-lg-5 offset-2 col-8 mt-2 offset-lg-1 col-lg-10 mt-0 p-3"
+                                                src="{{ asset('images/usersAvatar/' ~ forum.author.avatar)|imagine_filter('avatar') }}"
+                                                alt="avatar">
+                                            {% endif %}
+                                        </a>
+
+                                        <div class="mb-0 fs-6 card-title text-center"><h6 class="mb-0 p-1 ">
+                                            <a href="{{ path('main_profil_forum', { id : forum.author.id }) }}">{{ forum.author.pseudonym }}
+                                            </a></h6>
+                                            <h6 class="mb-0 p-1 ">Statut : {{ forum.author.roles[0]|renameRole }} </h6>
+
+                                        </div>
+                                        <hr>
+                                        <div class="card-body d-none d-lg-block text-center">
+                                            <div class="card-text">
+                                                <div class="mb-3 ">
+                                                    <div>Inscription :</div>
+                                                    <div>{{ forum.author.registrationDate|date("d/m/Y") }}</div>
+                                                </div>
+                                            </div>
+                                            <div class="card-text">
+                                                <h6 class="mb-0">Messages : {{ forum.author.comments|length }}</h6>
+                                            </div>
+
+
+                                        </div> {# fin card-body #}
+
+                                    </div> {# fin card #}
+
+
+                                </div>
+
+                            </div> {# fin col-2 profil #}
+
+                            {# content col-10 #}
+                            <div class="col-12 col-lg-9 col-xl-10 bg-light
+                                d-flex flex-column">
+                                <div class="d-flex  flex-grow-1 p-5  text-break">
+                                    {# utilisation du filtre purify du bundle exercise/htmlpurifier pour nettoyer le contenu html #}
+                                    <p>{{ forum.content|purify }}</p>
+                                </div>
+
+                                <hr>
+                                {% if forum.author == app.user or is_granted('ROLE_MODERATOR') %}
+                                <div class="d-flex justify-content-end me-2">
+
+                                    <div class="p-2 ">
+                                        <a class=" btn btn-darkblue " href="{{ path('forum_edit', { id : forum.id }) }}" title="Modifier le message"><i class="fas fa-edit"></i></a>
+                                    </div>
+                                    {% if is_granted('ROLE_MODERATOR') %}
+                                    <div class="p-2 ">
+                                        <a onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette discussion ?')"
+                                        class=" btn btn-darkblue " href="{{ path('delete_forum', { id : forum.id, csrf_token : csrf_token('forum_delete' ~ forum.id ) }) }}" title="Supprimer le message">Supprimer le sujet</a>
+                                    </div>
+                                    {% endif %}
+                                    </div>
+                                {% endif %}
+                            </div>{# fin col-10 contenu #}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            {# Réponses au topic #}
+            <div class="row mt-5">
+                {# Liste des commentaires liés au topic #}
+                <h2 class="text-center mb-5">Commentaires </h2>
+
+
+                {% for comment in comments %}
+
+                <div class="col-12 mt-3 text-capitalize">
+                    <div class="row">
+
+
+                        <div class="ariane bg-darkblue m-0 d-flex flex-column flex-lg-row px-3 py-2 justify-content-between">
+                            <div class="text-white px-3 py-2"><span><i class="far fa-clock px-1"></i></span>{{ comment.publicationDate|date("d/m/Y à H\\hi") }}
+                            </div>
+                            <a href="#top-forum-selected" class="d-flex px-3 py-2 " >Réponse au sujet : {{ forum.title }}</a>
+                        </div>
+
+                        <div class="row topic-forum bg-dark border border-dark border-3 p-0 g-0
+                        d-flex flex-column flex-lg-row">
+
+                            {# Profil de l'utilisateur (pseudo, rôle, photo de profil si il y'en as une, date d'inscription, nombre de messages) #}
+                            <div class=" col-12 col-lg-3 col-xl-2 d-flex ">
+                                <div class="col-12 d-flex bg-dark">
+
+
+                                    {# détails profil #}
+                                    <div class="card-profil-topic card rounded bg-dark text-white p-lg-3
+                                        d-flex flex-grow-1     d-flex flex-row flex-lg-column">
+                                        <a href="{{ path('main_profil_forum', { id : comment.author.id }) }}">
+                                            {% if comment.author.avatar is null %}
+                                            <img class="img-thumbnail img-fluid bg-darkblue rounded mb-3 mb-lg-5 offset-2 col-8 mt-2 offset-lg-1 col-lg-10 mt-0 p-3"
+                                                src="{{ asset('images/profil_default.jpg')|imagine_filter('avatar') }}"
+                                                alt="avatar">
+                                            {% else %}
+                                            <img class="img-thumbnail img-fluid bg-darkblue rounded mb-3 mb-lg-5 offset-2 col-8 mt-2 offset-lg-1 col-lg-10 mt-0 p-3"
+                                                src="{{ asset('images/usersAvatar/' ~ comment.author.avatar)|imagine_filter('avatar') }}"
+                                                alt="avatar">
+                                            {% endif %}
+                                        </a>
+
+                                        <div class="mb-0 fs-6 card-title text-center">
+                                            <h6 class="mb-0 p-1 ">
+                                                <a href="{{ path('main_profil_forum', { id : comment.author.id }) }}">{{ comment.author.pseudonym }}</a>
+                                            </h6> {# todo condition #}
+                                            <h6 class="mb-0 p-1 ">Statut: {{ comment.author.roles[0]|renameRole }} </h6>
+
+                                        </div>
+                                        <hr>
+                                        <div class="card-body d-none d-lg-block text-center">
+                                            <div class="card-text">
+                                                <div class="mb-3 ">
+                                                    <div>Inscription :</div>
+                                                    <div>{{ comment.author.registrationDate|date("d/m/Y") }}</div>
+                                                </div>
+                                            </div>
+                                            <div class="card-text">
+                                                <h6 class="mb-0">Messages : {{ comment.author.comments|length }}</h6>
+                                            </div>
+                                        </div><!-- fin card-body-->
+
+                                    </div><!-- fin card-->
+
+                                </div>
+
+                            </div><!-- fin col-2 profil-->
+
+                            <!--  content col-10 -->
+                            <div class="col-12 col-lg-9 col-xl-10 bg-light
+                            d-flex flex-column">
+                                <div class="d-flex  flex-grow-1 p-5  text-break">
+                                    <p>{{ comment.content|purify|nl2br }}</p>
+                                </div>
+
+                                <hr>
+                                {# Si l'utilisateur au moins moderateur, on affiche le bouton supprimer #}
+                                {% if comment.author == app.user or is_granted('ROLE_MODERATOR') %}
+                                <div class="d-flex justify-content-end me-2">
+
+                                    <div class="p-2 ">
+                                        <a class=" btn btn-darkblue "
+                                        href="{{ path('comment_edit', { id : comment.id }) }}" title="Modifier le message"><i class="fas fa-edit"></i></a>
+                                    </div>
+                                    {% if is_granted('ROLE_MODERATOR') %}
+                                    <div class="p-2 ">
+                                        <a onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette discussion ?')"
+                                        class=" btn btn-darkblue "
+                                        href="{{ path('comment_delete', { id : comment.id, csrf_token : csrf_token('comment_delete' ~ comment.id ) }) }}" title="Supprimer le message"><i class="fas fa-trash-alt"></i></a>
+                                    </div>
+                                    {% endif %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            {# fin col-10 contenu #}
+
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <p class="text-center">Aucun commentaire n'a été publié pour le moment.</p>
+                {% endfor %}
+
+                {# pagination bottom #}
+                <div class="row">
+                    <div class="me-auto m-3 text-center d-flex justify-content-end ">
+                        {{ knp_pagination_render(comments) }}
+                    </div>
+                </div>
+            </div>
+
+            {% if is_granted('ROLE_USER') %}
+            {# formulaire #}
+            <div class="row">
+                <div class="col-12 col-md-8 offset-md-2 mt-5 bg-blue p-5">
+                    {{ form(form) }}
+                </div>
+            </div>
+            {# fin contener fluid #}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block css %}
+    <style>
+
+        @media (max-width: 640px) {
+            .row  {
+                --bs-gutter-x: 0;
+            }
+        }
+    </style>
+{% endblock %}

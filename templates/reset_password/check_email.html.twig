@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réinitialisation du mot de passe{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-8 offset-md-2 my-5 p-5">
+                <h1 class="text-center mb-5" >Réinitialisation du mot de passe</h1>
+                <p class="mt-3">S'il existe un compte correspondant à votre adresse mail, un e-mail vous a été envoyé contenant un lien que vous pouvez utiliser pour réinitialiser votre mot de passe.
+        Ce lien expirera dans {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.</p>
+                <p class="mt-5">Si vous ne recevez pas d'e-mail, veuillez vérifier votre dossier spam ou <a href="{{ path('app_forgot_password_request') }}">Essayer encore</a>.</p>
+                <div class="d-flex flex-row">
+                    <p class="mt-5 text-center">L'équipe d'Arcade vous souhaite une bonne journée !</p>
+                    <img src="{{ asset('images/delivery-robot.png')|imagine_filter('avatar')}}" alt="robot-pictogram" class="ms-2">
+                    {# https://thenounproject.com/term/delivery-robot/3776617/ #}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

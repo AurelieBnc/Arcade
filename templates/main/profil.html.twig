@@ -1,0 +1,160 @@
+{% extends 'base.html.twig' %}
+
+{# Titre de la page #}
+{% block title %}Profil{% endblock %}
+
+{# contenu de la page profil #}
+{% block body %}
+
+<div class="container">
+    <div class="row gutters-sm mt-5">
+
+        <!-- Profil -> avatar, pseudo et role  -->
+        <div class="col-md-4 mb-3">
+            <div class="card" style="height: 280px;">
+                <div class="card-body bg-darkblue text-white">
+                    <div class="d-flex flex-column align-items-center text-center">
+
+                        {% if app.user.avatar is null %}
+                        <img class="img-thumbnail img-fluid"
+                            src="{{ asset('images/profil_default.jpg')|imagine_filter('avatar') }}" alt="avatar">
+                        {% else %}
+                        <img class="img-thumbnail img-fluid"
+                            src="{{ asset('images/usersAvatar/' ~ app.user.avatar)|imagine_filter('avatar') }}"
+                            alt="avatar">
+                        {% endif %}
+
+                        <div class="mt-2">
+                            <h6 class="mb-0 p-1 ">Statut : {{ app.user.roles[0]|renameRole }} </h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- détail du profil -> pseudo, date d'inscription, role et nombre de messages + bouton edit  -->
+        <div class="col-md-8">
+            <div class="card mb-3" style="height: 280px;">
+                <div class="card-body bg-darkblue text-white">
+                    <div class="row">
+                        <div>
+                            <h5 class="mb-0 text-capitalize">Pseudo : {{ app.user.pseudonym }}</h5>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div>
+                            <h5 class="mb-0">Date d'inscription : {{ app.user.registrationDate|date("d/m/Y à H\\hi") }}</h5>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div>
+                            <h5 class="mb-0">Email : {{ app.user.email }} </h5>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-12 text-center pt-3">
+                            <a class="btn btn-lg btn-darkblue " href=" {{ path('edit_profil') }} ">Editer le profil</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row mt-2">
+        <div class="card bg-darkblue">
+            <div class="card-body bg-darkblue text-white">
+                <div>
+                    <div class="col-12">
+                        <h4 class="mb-0 text-center">Description </h4>
+                    </div>
+                    {% if app.user.description is null %}
+                        <div class="mt-1 text-secondary text-center">
+                            <p>Aucune description</p>
+                        </div>
+                    {% else %}
+                        <div class="mt-1 text-center">
+                            {{ app.user.description|purify }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Affiche le nombre message#}
+    <div class="row">
+        <p class="col-12 text-center mt-4">Nombre total de message : {{ comments|length }} </p>
+    </div>
+
+
+    <h1 class="mt-5">Messages postés </h1>
+
+    <div class="row mt-2">
+
+        <!-- Derniers message postés -->
+        {% for comment in comments %}
+        <div class="col-12 mt-3 ">
+            <div class="row">
+    
+                    <!-- détails profil-->
+                    <div class="col-3 col-md-2">
+                        <a href="{{ path('main_profil') }}">{% if app.user.avatar is null %}
+                            <img class="d-block img-fluid"
+                                src="{{ asset('images/profil_default.jpg')|imagine_filter('avatar') }}" alt="avatar">
+                            {% else %}
+                            <img class="d-block img-fluid"
+                                src="{{ asset('images/usersAvatar/' ~ app.user.avatar)|imagine_filter('avatar') }}"
+                                alt="avatar">
+                            {% endif %}
+                        </a>
+                    </div>
+    
+                    <!--  content  -->
+                    <div class=" titre-forum col-9 col-md-10 d-flex flex-column ">
+                        <p class="text-bolder fs-5">Réponse à
+                        <a href="{{ path('forum', { slug:comment.forum.slug}) }}" class=" fs-4 text-capitalize text-dark " > <i class="far fa-arrow-alt-circle-right"></i> {{ comment.forum.title }}</a></p>
+                        <div class=" mt-3 text-break">
+                            {{ comment.content|purify }}
+                        </div>
+                        <div>
+                            <span><i class="far fa-clock px-1"></i></span>{{ comment.publicationDate|date("d/m/Y à H\\hi") }}
+                        </div>
+    
+    
+    
+                            {# Si l'utilisateur  #}
+                            {% if comment.author == app.user or is_granted('ROLE_MODERATOR') %}
+                            <div class="d-flex justify-content-end me-2">
+                                <div class="p-2 ">
+                                    <a class=" btn btn-darkblue "
+                                       href="{{ path('comment_edit_profil', { id : comment.id }) }}" title="Modifier le message"><i class="fas fa-edit"></i></a>
+                                </div>
+                                {% if is_granted('ROLE_MODERATOR') %}
+                                <div class="p-2 ">
+                                    <a onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette discussion ?')"
+                                       class=" btn btn-darkblue "
+                                       href="{{ path('comment_delete_profil', { id : comment.id, csrf_token : csrf_token('comment_delete' ~ comment.id ) }) }}" title="Supprimer le message"><i class="fas fa-trash-alt"> </i></a>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                    </div>
+    
+                <hr>
+            </div>
+        </div>
+
+        {% else %}
+
+        <p class="col-12 fw-bold text-center alert bg-lightblue mt-3">Aucun message à afficher.</p>
+
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

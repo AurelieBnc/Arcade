@@ -1,0 +1,150 @@
+{% set route = app.request.attributes.get('_route') %}
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Arcade{% endblock %} - Forum Arcade</title>
+    {# Inclusion des fichiers CSS et CND #}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+    <link rel="icon" href="{{ asset('favicon.ico') }}">
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    {% block css %}
+    {# Inclusion CSS individuels si besoin#}
+    {% endblock %}
+</head>
+
+<body>
+    {# Menu principal #}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-darkblue">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ path('home') }}"><img class="img-logo" src="{{ asset('images/logo.jpg') }}"
+                    alt="logo"></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav  mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link{{ route == 'home' ? ' active' }}" href="{{ path('home') }}"><i
+                                class="fas fa-home mx-1"></i>Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link{{ route == 'rank' ? ' active' }}" href="{{ path('rank') }}"><i class="fas fa-trophy"></i> Classement</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link{{ route == 'view_event' ? ' active' }}" href="{{ path('view_event') }}"><i class="fas fa-newspaper me-1"></i> Annonces</a>
+                    </li>
+
+                    {% if is_granted('ROLE_MODERATOR') %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-light" href="#" id="profil-dropdown" role="button"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-pen-square me-1"></i> Création :
+                        </a>
+                        <div class="dropdown-menu bg-dark" aria-labelledby="profil-dropdown">
+
+                            <a class="dropdown-item" href="{{ path('create_event') }}"><i
+                                class="fas fa-newspaper me-1"></i>Annonces</a>
+
+                            <a class="dropdown-item" href="{{ path('new_category') }}"><i
+                                class="fas fa-list-ul me-1"></i>catégories</a>
+                        </div>
+                    </li>
+                    {% endif %}
+                </ul>
+
+                {# Boutons à droite #}
+                <ul class="navbar-nav ms-auto me-3">
+
+                    {# si l'utilisateur est connecté #}
+                    {% if app.user %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-light" href="#" id="profil-dropdown" role="button"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-user mx-1"></i> {{ app.user.pseudonym }}
+                        </a>
+                        <div class="dropdown-menu bg-dark" aria-labelledby="profil-dropdown">
+
+                            <a class="dropdown-item" href="{{ path('main_profil') }}"><i
+                                    class="fas fa-users-cog me-1"></i>Mon Profil</a>
+
+                            <a class="dropdown-item" href="{{ path('logout') }}"><i
+                                    class="fas fa-sign-out-alt me-1"></i>Déconnexion</a>
+                        </div>
+                    </li>
+                    {% else %} {# Boutons si l'utilisateur n'est pas connecté #}
+                    <li class="nav-item">
+                        <a class="nav-link{{ route == 'register' ? ' active' }}" href="{{ path('register') }}"><i
+                                class="fas fa-user-plus mx-1"></i>Inscription</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link{{ route == 'login' ? ' active' }}" href="{{ path('login') }}"><i
+                                class="fas fa-sign-in-alt mx-1"></i>Connexion</a>
+                    </li>
+                    {% endif %}
+
+                </ul>
+
+                
+            </div>
+        </div>
+    </nav>
+
+    {# Bannière #}
+    <div class="container">
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center">
+                <img class="img-fluid" src="{{ asset('images/banner.jpg') }}" alt="bannière">
+            </div>
+        </div>
+    </div>
+
+
+    {% block body %}{% endblock %}
+
+    {# footer #}
+    <div class="container-fluid pb-0 px-0 mb-0 text-light ">
+        <footer class="row mt-5 justify-content-center py-3 mx-0 bg-darkblue">
+            <div class="col-11">
+                <div class="row ">
+                    <div class="col-xl-8 col-md-4 col-sm-4 my-auto">
+                        <h3>Arcade</h3>
+                    </div>
+                    <div class="col-xl-2 col-md-4 col-sm-4 col-12">
+                        <h6 class="mb-3 mb-lg-4 bold-text "><b>MENU</b></h6>
+                        <ul class="list-unstyled">
+                            <li><a class="page-footer" href="{{ path('home') }}">Page d'accueil</a></li>
+                            <li><a class="page-footer" href="{{ path('rank') }}">Classement</a></li>
+                            <li><a class="page-footer" href="{{ path('view_event') }}">Annonces</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row ">
+                    <div class="col-xl-8">
+                        <small><span>&#174;</span> Arcade All Rights Reserved.</small>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    {# Affichage des messages flashes de succès et d'erreur #}
+    {% include 'partials/success.html.twig' %}
+    {% include 'partials/error.html.twig' %}
+
+    {# Inclusions des fichiers JS généraux du site #}
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('js/script.js') }} "></script>
+
+    {% block javascripts %}
+    {# Inclusion JS individuels si besoin#}
+    {% endblock %}
+</body>
+
+</html>
